@@ -1,17 +1,16 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
+import Homepage from './pages/Homepage';
+import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import { useState } from 'react';
 
-function App() {
+export default function App() {
+  const [currentPage, setCurrentPage] = useState('home');
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-      </Routes>
-    </Router>
-  )
+    <>
+      {currentPage === 'home' && <Homepage setCurrentPage={setCurrentPage} />}
+      {currentPage === 'dashboard' && <Dashboard setCurrentPage={setCurrentPage} />}
+      {currentPage === 'login' && <Login setCurrentPage={setCurrentPage} />}
+    </>
+  );
 }
-
-export default App
