@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 export default function App() {
   //const [currentPage, setCurrentPage] = useState('home');
-  const [currentPage, setCurrentPage] = useState('dashboard'); 
+  const [currentPage, setCurrentPage] = useState('home');
 
   return (
     <>

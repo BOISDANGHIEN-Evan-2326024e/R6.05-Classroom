@@ -28,7 +28,7 @@ import {
   getQCMColor,
   getTimeLeft,
   getQCMUrgence,
-} from '/amuhome/f23022625/But3/DevAvance2/R6.05-Classroom/front-end/classroom-front/src/utils/mockData';
+} from '../utils/mockData';
 
 import { useDashboardData } from './../hooks/useDashboardData';
 
