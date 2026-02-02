@@ -38,6 +38,9 @@ class Course
     #[ORM\OneToMany(targetEntity: Quiz::class, mappedBy: 'course_associated')]
     private Collection $quizzes;
 
+    #[ORM\Column(length: 5000, nullable: true)]
+    private ?string $description = null;
+
     public function __construct()
     {
         $this->ressource_associated = new ArrayCollection();
@@ -141,6 +144,18 @@ class Course
                 $quiz->setCourseAssociated(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }
