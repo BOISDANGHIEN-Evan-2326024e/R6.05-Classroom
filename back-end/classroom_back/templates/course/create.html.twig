@@ -1,0 +1,704 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un nouveau cours{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation Header */
+        .navbar {
+            background: linear-gradient(to right, #7c3aed, #8b5cf6);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .navbar-brand-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: white;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-header-content {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .page-icon {
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            flex-shrink: 0;
+        }
+
+        .page-title h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-title p {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #6ee7b7;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #fca5a5;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        label.required::after {
+            content: " *";
+            color: #ef4444;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+            outline: none;
+            font-family: inherit;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-help {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        /* File Upload Area */
+        .file-upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.2s;
+            cursor: pointer;
+            background: #f9fafb;
+        }
+
+        .file-upload-area:hover {
+            border-color: #8b5cf6;
+            background: #f5f3ff;
+        }
+
+        .file-upload-area.dragover {
+            border-color: #7c3aed;
+            background: #ede9fe;
+        }
+
+        .file-upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload-text {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload-hint {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* File List */
+        .file-list {
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+        }
+
+        .file-icon {
+            font-size: 1.5rem;
+        }
+
+        .file-details {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: #111827;
+            font-size: 0.875rem;
+        }
+
+        .file-size {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .file-remove {
+            background: #fee2e2;
+            color: #991b1b;
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .file-remove:hover {
+            background: #fecaca;
+        }
+
+        /* Form Row */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #f3f4f6;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #7c3aed, #8b5cf6);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(to right, #6d28d9, #7c3aed);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: linear-gradient(135deg, #ede9fe, #f3e8ff);
+            border-left: 4px solid #8b5cf6;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            color: #6d28d9;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-box-text {
+            color: #5b21b6;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-card {
+                padding: 1.5rem;
+            }
+
+            .page-header {
+                padding: 1.5rem;
+            }
+
+            .page-header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="{{ path('app_dashboard') }}" class="navbar-brand">
+                <div class="navbar-brand-icon">👨‍🏫</div>
+                <span>ClassRoom</span>
+            </a>
+            <a href="{{ path('app_dashboard') }}" class="btn-back">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Retour au tableau de bord
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="page-header-content">
+                <div class="page-icon">📚</div>
+                <div class="page-title">
+                    <h1>Créer un nouveau cours</h1>
+                    <p>Remplissez les informations ci-dessous pour créer votre cours</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Flash -->
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                <span>✅</span>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">
+                <span>⚠️</span>
+                <span>{{ message }}</span>
+            </div>
+        {% endfor %}
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <div class="info-box-title">
+                <span>💡</span>
+                <span>Conseil</span>
+            </div>
+            <div class="info-box-text">
+                Vous pouvez ajouter des vidéos (MP4, AVI, MOV) et des documents PDF pour enrichir votre cours. Taille maximale : 50 Mo par fichier.
+            </div>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card">
+            <form method="post" enctype="multipart/form-data" id="courseForm">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="courseName" class="required">Nom du cours</label>
+                        <input
+                            type="text"
+                            id="courseName"
+                            name="name"
+                            placeholder="Ex: Introduction à JavaScript"
+                            required
+                        >
+                        <div class="form-help">Donnez un titre clair et descriptif à votre cours</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="courseDuration" class="required">Durée (en minutes)</label>
+                        <input
+                            type="number"
+                            id="courseDuration"
+                            name="duration"
+                            placeholder="60"
+                            min="1"
+                            required
+                        >
+                        <div class="form-help">Durée estimée du cours</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="courseDescription">Description (optionnel)</label>
+                    <textarea
+                        id="courseDescription"
+                        name="description"
+                        placeholder="Décrivez brièvement le contenu du cours..."
+                    ></textarea>
+                    <div class="form-help">Ajoutez une description pour aider les étudiants à comprendre le contenu</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Documents du cours (vidéos et PDF)</label>
+                    <div class="file-upload-area" id="fileUploadArea">
+                        <div class="file-upload-icon">📁</div>
+                        <div class="file-upload-text">Cliquez pour ajouter des fichiers</div>
+                        <div class="file-upload-hint">ou glissez-déposez vos fichiers ici</div>
+                        <div class="file-upload-hint" style="margin-top: 0.5rem;">
+                            Formats acceptés : PDF, MP4, AVI, MOV (max 50 Mo)
+                        </div>
+                    </div>
+                    <input
+                        type="file"
+                        id="courseFiles"
+                        name="files[]"
+                        multiple
+                        accept=".pdf,.mp4,.avi,.mov"
+                    >
+                    <div class="file-list" id="fileList"></div>
+                </div>
+
+                <!-- CSRF Token -->
+                <input type="hidden" name="_token" value="{{ csrf_token('course_create') }}">
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                        </svg>
+                        Créer le cours
+                    </button>
+                    <a href="{{ path('app_dashboard') }}" class="btn btn-secondary">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                        Annuler
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // File upload handling
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const fileInput = document.getElementById('courseFiles');
+        const fileList = document.getElementById('fileList');
+        const submitBtn = document.getElementById('submitBtn');
+        let selectedFiles = [];
+
+        // Click to upload
+        fileUploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // File selection
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        // Drag and drop
+        fileUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', () => {
+            fileUploadArea.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        function handleFiles(files) {
+            const maxSize = 50 * 1024 * 1024; // 50 MB
+            const allowedTypes = ['application/pdf', 'video/mp4', 'video/avi', 'video/quicktime'];
+
+            Array.from(files).forEach(file => {
+                // Check file size
+                if (file.size > maxSize) {
+                    alert(`Le fichier "${file.name}" est trop volumineux (max 50 Mo)`);
+                    return;
+                }
+
+                // Check file type
+                if (!allowedTypes.includes(file.type) && !file.name.match(/\.(pdf|mp4|avi|mov)$/i)) {
+                    alert(`Le fichier "${file.name}" n'est pas au bon format (PDF, MP4, AVI, MOV uniquement)`);
+                    return;
+                }
+
+                selectedFiles.push(file);
+            });
+
+            updateFileList();
+            updateFileInput();
+        }
+
+        function updateFileList() {
+            fileList.innerHTML = '';
+
+            selectedFiles.forEach((file, index) => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+
+                const fileIcon = getFileIcon(file.name);
+                const fileSize = formatFileSize(file.size);
+
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <div class="file-icon">${fileIcon}</div>
+                        <div class="file-details">
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-size">${fileSize}</div>
+                        </div>
+                    </div>
+                    <button type="button" class="file-remove" data-index="${index}">
+                        Supprimer
+                    </button>
+                `;
+
+                fileList.appendChild(fileItem);
+            });
+
+            // Add remove listeners
+            document.querySelectorAll('.file-remove').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    selectedFiles.splice(index, 1);
+                    updateFileList();
+                    updateFileInput();
+                });
+            });
+        }
+
+        function updateFileInput() {
+            // Create a new DataTransfer to update the file input
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => dataTransfer.items.add(file));
+            fileInput.files = dataTransfer.files;
+        }
+
+        function getFileIcon(filename) {
+            if (filename.match(/\.pdf$/i)) return '📄';
+            if (filename.match(/\.(mp4|avi|mov)$/i)) return '🎬';
+            return '📎';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        // Form validation
+        document.getElementById('courseForm').addEventListener('submit', (e) => {
+            const name = document.getElementById('courseName').value.trim();
+            const duration = document.getElementById('courseDuration').value;
+
+            if (!name) {
+                e.preventDefault();
+                alert('Veuillez renseigner le nom du cours');
+                return;
+            }
+
+            if (!duration || duration < 1) {
+                e.preventDefault();
+                alert('Veuillez renseigner une durée valide');
+                return;
+            }
+
+            // Disable submit button to prevent double submission
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                </svg>
+                Création en cours...
+            `;
+        });
+    </script>
+
+    <style>
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+{% endblock %}
