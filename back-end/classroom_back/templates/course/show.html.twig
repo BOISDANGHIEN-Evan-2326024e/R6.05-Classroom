@@ -1,0 +1,358 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ course.name }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* --- Styles globaux (hérités du dashboard) --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .navbar {
+            background: linear-gradient(to right, #7c3aed, #8b5cf6);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-container {
+            max-width: 1100px; /* Un peu plus étroit pour la lecture */
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* --- En-tête du cours --- */
+        .course-header-card {
+            background: white;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            padding: 3rem 2rem;
+            color: white;
+        }
+
+        .course-title {
+            font-size: 2.25rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 1.5rem;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-content {
+            padding: 2rem;
+        }
+
+        .description-title {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .description-text {
+            color: #4b5563;
+            line-height: 1.6;
+        }
+
+        /* --- Section Contenu (Vidéos & PDF) --- */
+        .content-section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        /* Vidéo Player */
+        .video-wrapper {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .video-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 0.75rem;
+            background: #000;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        /* PDF Grid */
+        .pdf-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pdf-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .pdf-card:hover {
+            border-color: #8b5cf6;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .pdf-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .pdf-icon {
+            font-size: 2rem;
+            background: #fee2e2;
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            color: #991b1b;
+        }
+
+        .pdf-info h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.25rem;
+            word-break: break-word;
+        }
+
+        .pdf-info span {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .pdf-actions {
+            margin-top: auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .btn-action {
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-view {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .btn-view:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-download {
+            background: #7c3aed;
+            color: white;
+        }
+
+        .btn-download:hover {
+            background: #6d28d9;
+        }
+
+        .empty-files {
+            background: #f9fafb;
+            border: 2px dashed #e5e7eb;
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            color: #6b7280;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="{{ path('teacher_dashboard') }}" class="btn-back">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Retour
+            </a>
+            <span style="font-weight: 600; font-size: 1.1rem;">{{ course.name }}</span>
+        </div>
+    </nav>
+
+    <div class="main-container">
+
+        <div class="course-header-card">
+            <div class="header-banner">
+                <h1 class="course-title">{{ course.name }}</h1>
+                <div class="course-meta">
+                    <div class="meta-item">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        {{ course.duration }} minutes
+                    </div>
+                    <div class="meta-item">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Ajouté le {{ 'now'|date('d/m/Y') }}
+                    </div>
+                </div>
+            </div>
+            <div class="header-content">
+                <span class="description-title">À propos de ce cours</span>
+                <p class="description-text">
+                    {{ course.description|default('Aucune description disponible pour ce cours.')|nl2br }}
+                </p>
+            </div>
+        </div>
+
+
+        {% set videos = [] %}
+        {% set pdfs = [] %}
+
+        {% for ressource in course.ressourceAssociated %}
+
+            {% if ressource.path matches '/\.(mp4|avi|mov)$/i' %}
+                {% set videos = videos|merge([ressource]) %}
+            {% elseif ressource.path matches '/\.pdf$/i' %}
+                {% set pdfs = pdfs|merge([ressource]) %}
+            {% endif %}
+
+        {% endfor %}
+
+        {% if videos is not empty %}
+            <div class="content-section">
+                <h2 class="section-title">
+                    <span>🎬</span> Vidéos du cours
+                </h2>
+                {% for video in videos %}
+                    <div class="video-wrapper">
+                        <div class="video-title">{{ video.name }}</div>
+                        <video controls controlsList="nodownload">
+                            <source src="{{ asset('' ~ video.path) }}" type="video/mp4">
+                            Votre navigateur ne supporte pas la lecture de vidéos.
+                        </video>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if pdfs is not empty %}
+            <div class="content-section">
+                <h2 class="section-title">
+                    <span>📄</span> Documents et Supports
+                </h2>
+                <div class="pdf-grid">
+                    {% for pdf in pdfs %}
+                        <div class="pdf-card">
+                            <div class="pdf-header">
+                                <div class="pdf-icon">PDF</div>
+                                <div class="pdf-info">
+                                    {# pdf.name pour le nom d'affichage #}
+                                    <h4>{{ pdf.name }}</h4>
+                                    <span>Document de cours</span>
+                                </div>
+                            </div>
+                            <div class="pdf-actions">
+                                {# pdf.path pour le lien #}
+                                <a href="{{ asset('' ~ pdf.path) }}" target="_blank" class="btn-action btn-view">
+                                    Voir
+                                </a>
+                                <a href="{{ asset('' ~ pdf.path) }}" download class="btn-action btn-download">
+                                    Télécharger
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if videos is empty and pdfs is empty %}
+            <div class="empty-files">
+                Ce cours ne contient aucun contenu multimédia pour le moment.
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}
