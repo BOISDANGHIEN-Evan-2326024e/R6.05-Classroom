@@ -8,26 +8,25 @@ class UserOutput
 {
     public int $id;
     public string $email;
-    public array $roles;
-    public string $prenom; // Placeholder pour le front
-    public string $nom;    // Placeholder pour le front
+    public string $prenom;
+    public string $nom;
+    public string $dateInscription;
     public array $matieres;
-    public int $totalQuizAttempts;
 
     public function __construct(User $user)
     {
         $this->id = $user->getId();
         $this->email = $user->getEmail();
-        $this->roles = $user->getRoles();
-        
+        // Placeholder car champs inexistants
         $this->prenom = "Jean"; 
-        $this->nom = "Dupont";
+        $this->nom = "Dupont"; 
+        $this->dateInscription = "2023-09-01"; 
 
-        // Extraction des noms des cours 
-        $this->matieres = array_map(function($course) {
-            return $course->getTitre(); 
-        }, $user->getCourses()->toArray());
-
-        $this->totalQuizAttempts = $user->getQuizAttempts()->count();
+        // Récupère les matiere
+        $matieres = [];
+        foreach ($user->getCourses() as $course) {
+            $matieres[] = $course->getName(); 
+        }
+        $this->matieres = array_unique($matieres);
     }
 }

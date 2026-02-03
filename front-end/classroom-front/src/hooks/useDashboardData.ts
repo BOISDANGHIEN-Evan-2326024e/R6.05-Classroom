@@ -17,14 +17,19 @@ export function useDashboardData() {
       try {
         setIsLoading(true);
         
-        // On lance tous les appels en même temps
+        const options = {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include' as RequestCredentials, // <--- CA C'EST VITAL
+        };
+
         const [userRes, statsRes, coursRes, qcmRes, notesRes, videosRes] = await Promise.all([
-          fetch('http://localhost:8000/api/user'),
-          fetch('http://localhost:8000/api/stats'),
-          fetch('http://localhost:8000/api/cours'),
-          fetch('http://localhost:8000/api/qcm'),
-          fetch('http://localhost:8000/api/notes'),
-          fetch('http://localhost:8000/api/videos')
+            fetch('http://localhost:8000/api/user', options),
+            fetch('http://localhost:8000/api/stats', options),
+            fetch('http://localhost:8000/api/cours', options),
+            fetch('http://localhost:8000/api/qcm', options),
+            fetch('http://localhost:8000/api/notes', options),
+            fetch('http://localhost:8000/api/videos', options)
         ]);
 
         if (!userRes.ok) throw new Error("Erreur lors du chargement des données");
@@ -36,7 +41,7 @@ export function useDashboardData() {
         const notesData = await notesRes.json();
         const videosData = await videosRes.json();
 
-        // --- CONVERSION DES DONNÉES (String vers Date) ---
+        // CONVERSION DES DONNEES
         
         // 1. User
         setUser({
