@@ -229,7 +229,7 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
                   );
                 })}
               </div>
-
+{/**
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
                 <h3 className="text-lg font-bold text-slate-900 mb-6">Progression (30 derniers jours)</h3>
                 <ResponsiveContainer width="100%" height={300}>
@@ -255,7 +255,7 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
                   </LineChart>
                 </ResponsiveContainer>
               </div>
-
+{/** */}
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
                 <div className="flex items-center gap-2 mb-6">
                   <AlertCircle className="text-red-500" size={24} />

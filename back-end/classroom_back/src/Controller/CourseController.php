@@ -129,4 +129,17 @@ class CourseController extends AbstractController
             'course' => $course,
         ]);
     }
+
+    #[Route('/api/cours', name: 'api_courses_index', methods: ['GET'])]
+    public function index(EntityManagerInterface $entityManager): JsonResponse
+    {
+        // On demande à l'EntityManager de nous donner le repository de l'entité Course
+        $courses = $entityManager->getRepository(Course::class)->findAll();
+
+        $output = array_map(function ($course) {
+            return new CourseOutput($course);
+        }, $courses);
+
+        return $this->json($output);
+    }
 }
