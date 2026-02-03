@@ -2,10 +2,8 @@
 
 namespace App\Controller;
 
-// 1. IMPORT DU REPOSITORY (C'est ça qui causait l'erreur)
 use App\Repository\UserRepository;
 
-// 2. IMPORTS NÉCESSAIRES POUR LA RÉPONSE ET L'OUTPUT
 use App\Output\UserOutput; 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
