@@ -121,7 +121,7 @@ class QuizAttempt
             }
         }
 
-        return $this;
+        return $this;   
     }
 
     public function getDateTermine(): ?\DateTime

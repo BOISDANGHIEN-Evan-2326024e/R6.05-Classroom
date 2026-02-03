@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\QuizAttempt;
 //use App\Output\QuizAttemptOutput;
 
-#[Route('/api/quiz-attempt')]
+#[Route('/api/notes')]
 class QuizAttemptController extends AbstractController
 {
     #[Route('/{id}', methods: ['GET'])]

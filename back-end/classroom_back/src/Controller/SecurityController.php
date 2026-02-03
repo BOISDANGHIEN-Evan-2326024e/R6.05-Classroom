@@ -28,6 +28,23 @@ class SecurityController extends AbstractController
         ]);
     }
 
+    #[Route(path: '/api/login', name: 'api_login', methods: ['POST'])]
+    public function apiLogin(): JsonResponse
+    {
+        $user = $this->getUser();
+
+        if (!$user) {
+            return $this->json(['error' => 'Identifiants invalides'], Response::HTTP_UNAUTHORIZED);
+        }
+
+        // On renvoie les infos de base à React
+        return $this->json([
+            'id' => $user->getId(),
+            'email' => $user->getUserIdentifier(),
+            'roles' => $user->getRoles()
+        ]);
+    }
+
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {

@@ -13,19 +13,44 @@ export default function Login({ setCurrentPage }: LoginProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [userRole, setUserRole] = useState<'student' | 'teacher' | null>(null)
 
-  const handleSubmit = () => {
-    if (!email || !password) {
-      alert('Veuillez remplir tous les champs')
-      return
-    }
-    setIsLoading(true)
-    setTimeout(() => {
-      setIsLoading(false)
-      alert(`Connexion avec: ${email}`)
-      // Rediriger vers dashboard après connexion
-      setCurrentPage('dashboard')
-    }, 1500)
+  const handleSubmit = async () => {
+  if (!email || !password) {
+    alert('Veuillez remplir tous les champs');
+    return;
   }
+  
+  setIsLoading(true);
+
+  try {
+    const response = await fetch('http://localhost:8000/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email: email,      // Doit matcher 'username_path' du yaml
+        password: password // Doit matcher 'password_path' du yaml
+      }),
+    });
+
+    if (response.ok) {
+      const userData = await response.json();
+      console.log('Utilisateur connecté :', userData);
+      
+      // Optionnel : stocker l'ID dans le localStorage si besoin
+      localStorage.setItem('user_id', userData.id);
+      
+      setCurrentPage('dashboard');
+    } else {
+      alert('Identifiants incorrects. Vérifiez votre email ou mot de passe.');
+    }
+  } catch (error) {
+    console.error('Erreur réseau :', error);
+    alert('Le serveur Symfony ne répond pas.');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {

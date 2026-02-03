@@ -18,17 +18,23 @@ class UserController extends AbstractController
     }
 
     #[Route('/api/user/{id}', name: 'api_user_show', methods: ['GET'])]
-    public function getUserByID(int $id): JsonResponse
+    public function getUserByID(int $id): JsonResponse 
     {
         $user = $this->userRepository->find($id);
+        if (!$user) return $this->json(['error' => 'User not found'], 404);
+        return $this->json(new UserOutput($user));
+    }
+
+    // Route pour l'utilisateur actuellement connecté
+    #[Route('/api/me', name: 'api_user_me', methods: ['GET'])]
+    public function getMe(): JsonResponse
+    {
+        $user = $this->getUser(); // Récupère l'élève via le cookie de session
 
         if (!$user) {
-            return $this->json(['error' => 'User not found'], Response::HTTP_NOT_FOUND);
+            return $this->json(['error' => 'Non authentifié'], Response::HTTP_UNAUTHORIZED);
         }
 
-        // On utilise le DTO qu'on a créé tout à l'heure
-        $output = new UserOutput($user);
-
-        return $this->json($output);
+        return $this->json(new UserOutput($user));
     }
 }
