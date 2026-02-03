@@ -1,0 +1,294 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail du QCM - {{ quiz.name }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background: #f3f4f6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .navbar {
+            background: linear-gradient(to right, #7c3aed, #8b5cf6);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.5rem 3rem 1.5rem;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: background 0.2s;
+        }
+        .btn-back:hover { background: rgba(255, 255, 255, 0.3); }
+
+        /* Header Card */
+        .quiz-header {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid #7c3aed;
+        }
+
+        .quiz-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .meta-label { font-size: 0.875rem; color: #6b7280; font-weight: 500; }
+        .meta-value { font-weight: 600; color: #374151; display: flex; align-items: center; gap: 0.5rem; }
+
+        /* Badge Difficulté */
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .badge-1 { background: #d1fae5; color: #065f46; } /* Facile */
+        .badge-2 { background: #fef3c7; color: #92400e; } /* Moyen */
+        .badge-3 { background: #fee2e2; color: #991b1b; } /* Difficile */
+
+        /* Questions */
+        .question-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border: 1px solid #e5e7eb;
+            position: relative;
+        }
+
+        .question-number {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: #f3f4f6;
+            color: #6b7280;
+            font-weight: bold;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1.5rem;
+            margin-left: 3.5rem; /* Espace pour le numéro */
+            line-height: 1.5;
+        }
+
+        /* Answers List */
+        .answers-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-left: 3.5rem;
+        }
+
+        .answer-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        /* Style pour la BONNE réponse */
+        .answer-item.correct {
+            border-color: #10b981;
+            background-color: #ecfdf5;
+        }
+
+        /* Style pour les mauvaises réponses */
+        .answer-item.wrong {
+            opacity: 0.7;
+        }
+
+        .answer-marker {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            border: 2px solid #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .answer-item.correct .answer-marker {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+
+        .answer-text {
+            font-size: 1rem;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .answer-item.correct .answer-text {
+            color: #065f46;
+            font-weight: 600;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            margin-top: 1.5rem;
+            margin-left: 3.5rem;
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            color: #1e40af;
+            font-size: 0.95rem;
+        }
+        .explanation-title {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <nav class="navbar">
+        <div class="container" style="padding-bottom: 0; display: flex; align-items: center;">
+            <a href="{{ path('teacher_dashboard') }}" class="btn-back">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Retour au tableau de bord
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="quiz-header">
+            <div class="quiz-title">
+                <span>📝</span>
+                {{ quiz.name }}
+            </div>
+
+            <div class="meta-grid">
+                <div class="meta-item">
+                    <span class="meta-label">Cours associé</span>
+                    <span class="meta-value">
+                        {{ quiz.courseAssociated.name|default('Non associé') }}
+                    </span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Ressource source</span>
+                    <span class="meta-value">
+                         {% if quiz.ressourceAssociated %}
+                             {% if quiz.ressourceAssociated.type.value == 'video' %}🎬{% else %}📄{% endif %}
+                             {{ quiz.ressourceAssociated.name }}
+                         {% else %}
+                             Aucune
+                         {% endif %}
+                    </span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Difficulté</span>
+                    <span class="meta-value">
+                        <span class="badge badge-{{ quiz.diffilculty }}">
+                            Niveau {{ quiz.diffilculty }}
+                        </span>
+                    </span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Questions</span>
+                    <span class="meta-value">{{ quiz.questions|length }} questions</span>
+                </div>
+            </div>
+        </div>
+
+        {% for question in quiz.questions %}
+            <div class="question-card">
+                <div class="question-number">Q{{ question.numero }}</div>
+                <div class="question-text">{{ question.libelle }}</div>
+
+                <div class="answers-list">
+                    {% for answer in question.answers %}
+                        <div class="answer-item {{ answer.reelAnswer ? 'correct' : 'wrong' }}">
+                            <div class="answer-marker">
+                                {% if answer.reelAnswer %}
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                {% endif %}
+                            </div>
+                            <div class="answer-text">{{ answer.label }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                {# Affiche l'explication si elle existe (Optionnel si tu as ajouté le champ) #}
+                {% if question.explanation is defined and question.explanation is not null %}
+                    <div class="explanation-box">
+                        <div class="explanation-title">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Explication
+                        </div>
+                        {{ question.explanation }}
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="question-card" style="text-align: center; color: #6b7280;">
+                <p>Aucune question n'a été générée pour ce quiz.</p>
+            </div>
+        {% endfor %}
+
+    </div>
+{% endblock %}

@@ -40,4 +40,9 @@ class QuestionRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function persist(Question $question)
+    {
+        $this->getEntityManager()->persist($question);
+        $this->getEntityManager()->flush();
+    }
 }
