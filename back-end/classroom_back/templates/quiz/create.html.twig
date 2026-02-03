@@ -1,0 +1,415 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Générer un QCM{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* --- Styles repris du Dashboard pour une cohérence parfaite --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation Header (Identique au Dashboard) */
+        .navbar {
+            background: linear-gradient(to right, #7c3aed, #8b5cf6);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .navbar-brand-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: white;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .navbar-username {
+            font-weight: 500;
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1000px; /* Un peu plus petit pour centrer le formulaire */
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* --- Styles Spécifiques au Formulaire (Adaptés au style Dashboard) --- */
+
+        /* En-tête de page interne */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .header-titles h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-titles p {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+
+        /* Bouton Retour style Dashboard */
+        .btn-back {
+            background: white;
+            color: #374151;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-back:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #7c3aed;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f3f4f6;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        select, input[type="text"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+            outline: none;
+            background-color: #fff;
+            color: #1f2937;
+        }
+
+        select:focus, input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        select:disabled {
+            background-color: #f3f4f6;
+            cursor: not-allowed;
+            color: #9ca3af;
+        }
+
+        /* Bouton Générer */
+        .btn-generate {
+            width: 100%;
+            background: linear-gradient(to right, #7c3aed, #8b5cf6);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.2);
+        }
+
+        .btn-generate:hover {
+            background: linear-gradient(to right, #6d28d9, #7c3aed);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-generate:disabled {
+            opacity: 0.7;
+            cursor: wait;
+        }
+
+        /* Animation Loading */
+        .loading-spinner {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            color: #7c3aed;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            font-weight: 500;
+        }
+
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .form-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="{{ path('teacher_dashboard') }}" class="navbar-brand">
+                <div class="navbar-brand-icon">👨‍🏫</div>
+                <span>ClassRoom</span>
+            </a>
+            <div class="navbar-user">
+                <span class="navbar-username">{{ app.user.userIdentifier }}</span>
+                <a href="{{ path('app_logout') }}" class="btn-logout">Déconnexion</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+
+        <div class="page-header">
+            <div class="header-titles">
+                <h1>✨ Générateur de QCM</h1>
+                <p>Sélectionnez un cours et un document, l'IA s'occupe du reste.</p>
+            </div>
+            <a href="{{ path('teacher_dashboard') }}" class="btn-back">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Retour au tableau de bord
+            </a>
+        </div>
+
+        <div class="form-card">
+            <form action="{{ path('quiz_generate_action') }}" method="POST" id="quizForm">
+
+                <div class="form-section-title">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Informations générales
+                </div>
+
+                <div class="form-group">
+                    <label for="quizName">Nom du QCM</label>
+                    <input type="text" id="quizName" name="name" placeholder="Ex: Évaluation Chapitre 1 - Les bases" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="difficulty">Niveau de difficulté</label>
+                    <select id="difficulty" name="difficulty" required>
+                        <option value="1">Facile (Questions simples)</option>
+                        <option value="2" selected>Moyen (Équilibré)</option>
+                        <option value="3">Difficile (Expertise requise)</option>
+                    </select>
+                </div>
+
+                <div class="form-section-title" style="margin-top: 2.5rem;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                    Source du contenu
+                </div>
+
+                <div class="form-group">
+                    <label for="courseSelect">1. Choisissez le cours</label>
+                    <select id="courseSelect" name="course" required>
+                        <option value="" disabled selected>-- Sélectionnez un de vos cours --</option>
+                        {% for course in courses %}
+                            <option value="{{ course.id }}">{{ course.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="resourceSelect">2. Choisissez le document de référence</label>
+                    <select id="resourceSelect" name="resource" disabled required>
+                        <option value="">-- Veuillez d'abord choisir un cours --</option>
+                    </select>
+
+                    <div id="loadingResources" class="loading-spinner">
+                        <svg class="animate-spin" width="16" height="16" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Recherche des documents en cours...
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-generate" id="submitBtn">
+                    <span class="magic-wand">🪄</span>
+                    Lancer la génération par IA
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const courseSelect = document.getElementById('courseSelect');
+            const resourceSelect = document.getElementById('resourceSelect');
+            const loadingIndicator = document.getElementById('loadingResources');
+
+            // --- Gestion du changement de cours ---
+            courseSelect.addEventListener('change', function() {
+                const courseId = this.value;
+
+                // Reset du select ressources
+                resourceSelect.innerHTML = '<option value="">-- Sélectionnez un document --</option>';
+                resourceSelect.disabled = true;
+
+                if (courseId) {
+                    // Afficher le spinner
+                    loadingIndicator.style.display = 'flex';
+
+                    // Appel AJAX
+                    fetch(`/api/course/${courseId}/resources`)
+                        .then(response => {
+                            if (!response.ok) throw new Error('Erreur réseau');
+                            return response.json();
+                        })
+                        .then(data => {
+                            loadingIndicator.style.display = 'none';
+
+                            if (data.length > 0) {
+                                resourceSelect.disabled = false;
+                                data.forEach(resource => {
+                                    const option = document.createElement('option');
+                                    option.value = resource.id;
+                                    // Ajout d'une icône visuelle dans le texte
+                                    const icon = resource.name.endsWith('.pdf') ? '📄 ' : '🎬 ';
+                                    option.text = icon + resource.name;
+                                    resourceSelect.appendChild(option);
+                                });
+                            } else {
+                                const option = document.createElement('option');
+                                option.text = "⚠️ Aucun document trouvé pour ce cours";
+                                resourceSelect.appendChild(option);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erreur:', error);
+                            loadingIndicator.style.display = 'none';
+                            resourceSelect.innerHTML = '<option value="">Erreur de chargement des fichiers</option>';
+                        });
+                }
+            });
+
+            // --- Animation au submit ---
+            document.getElementById('quizForm').addEventListener('submit', function(e) {
+                const btn = document.getElementById('submitBtn');
+
+                // On change le style du bouton
+                btn.disabled = true;
+                btn.style.opacity = '0.8';
+                btn.innerHTML = `
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="animate-spin">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    Analyse & Génération...
+                `;
+            });
+        });
+    </script>
+{% endblock %}

@@ -111,11 +111,6 @@ class CourseController extends AbstractController
                 }
             }
 
-            if (!empty($filesPaths)) {
-                //Create une ressource qu'on relie ensuite au course
-
-            }
-
             // Sauvegarder en base de données
             $entityManager->persist($course);
             $entityManager->flush();

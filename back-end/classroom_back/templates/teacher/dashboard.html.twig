@@ -1,555 +1,563 @@
-{% extends 'base.html.twig' %}
+    {% extends 'base.html.twig' %}
 
-{% block title %}Tableau de bord Professeur{% endblock %}
+    {% block title %}Tableau de bord Professeur{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    {% block stylesheets %}
+        {{ parent() }}
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
-            min-height: 100vh;
-        }
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+                min-height: 100vh;
+            }
 
-        /* Navigation Header */
-        .navbar {
-            background: linear-gradient(to right, #7c3aed, #8b5cf6);
-            color: white;
-            padding: 1rem 0;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
+            /* Navigation Header */
+            .navbar {
+                background: linear-gradient(to right, #7c3aed, #8b5cf6);
+                color: white;
+                padding: 1rem 0;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            }
 
-        .navbar-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+            .navbar-container {
+                max-width: 1280px;
+                margin: 0 auto;
+                padding: 0 1.5rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
 
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: white;
-            text-decoration: none;
-        }
+            .navbar-brand {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: white;
+                text-decoration: none;
+            }
 
-        .navbar-brand-icon {
-            width: 2.5rem;
-            height: 2.5rem;
-            background: white;
-            border-radius: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
+            .navbar-brand-icon {
+                width: 2.5rem;
+                height: 2.5rem;
+                background: white;
+                border-radius: 0.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+            }
 
-        .navbar-user {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+            .navbar-user {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
 
-        .navbar-username {
-            font-weight: 500;
-        }
+            .navbar-username {
+                font-weight: 500;
+            }
 
-        .btn-logout {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+            .btn-logout {
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+                text-decoration: none;
+                font-weight: 500;
+                transition: all 0.2s;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
 
-        .btn-logout:hover {
-            background: rgba(255, 255, 255, 0.3);
-            color: white;
-        }
+            .btn-logout:hover {
+                background: rgba(255, 255, 255, 0.3);
+                color: white;
+            }
 
-        /* Main Container */
-        .main-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
-        }
+            /* Main Container */
+            .main-container {
+                max-width: 1280px;
+                margin: 0 auto;
+                padding: 2rem 1.5rem;
+            }
 
-        /* Welcome Section */
-        .welcome-section {
-            background: linear-gradient(to right, #7c3aed, #8b5cf6);
-            border-radius: 1rem;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
+            /* Welcome Section */
+            .welcome-section {
+                background: linear-gradient(to right, #7c3aed, #8b5cf6);
+                border-radius: 1rem;
+                padding: 2.5rem;
+                margin-bottom: 2rem;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
 
-        .welcome-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-        }
-
-        .welcome-text h1 {
-            font-size: 2rem;
-            font-weight: bold;
-            color: white;
-            margin-bottom: 0.5rem;
-        }
-
-        .welcome-text p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.125rem;
-        }
-
-        .btn-primary {
-            background: white;
-            color: #7c3aed;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.2s;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-            color: #6d28d9;
-        }
-
-        /* Stats Grid */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .stat-icon {
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.75rem;
-        }
-
-        .stat-icon.purple {
-            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
-        }
-
-        .stat-icon.pink {
-            background: linear-gradient(135deg, #ec4899, #f472b6);
-        }
-
-        .stat-icon.blue {
-            background: linear-gradient(135deg, #3b82f6, #60a5fa);
-        }
-
-        .stat-info h3 {
-            font-size: 1.875rem;
-            font-weight: bold;
-            color: #111827;
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-info p {
-            color: #6b7280;
-            font-size: 0.875rem;
-        }
-
-        /* Section Titles */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #111827;
-        }
-
-        /* Cards Grid */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .course-card {
-            background: white;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-
-        .course-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            border-color: #8b5cf6;
-        }
-
-        .course-header {
-            display: flex;
-            align-items: start;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .course-icon {
-            width: 3rem;
-            height: 3rem;
-            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
-            border-radius: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .course-title {
-            flex: 1;
-        }
-
-        .course-title h3 {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #111827;
-            margin-bottom: 0.25rem;
-        }
-
-        .course-meta {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #6b7280;
-            font-size: 0.875rem;
-        }
-
-        .course-meta svg {
-            width: 1rem;
-            height: 1rem;
-        }
-
-        .course-description {
-            color: #6b7280;
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .course-footer {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .btn-sm {
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.875rem;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-info {
-            background: #7c3aed;
-            color: white;
-        }
-
-        .btn-info:hover {
-            background: #6d28d9;
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #e5e7eb;
-            color: #374151;
-        }
-
-        .btn-secondary:hover {
-            background: #d1d5db;
-            color: #1f2937;
-        }
-
-        /* Empty State */
-        .empty-state {
-            background: white;
-            border-radius: 1rem;
-            padding: 3rem 2rem;
-            text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .empty-state-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        .empty-state h3 {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #111827;
-            margin-bottom: 0.5rem;
-        }
-
-        .empty-state p {
-            color: #6b7280;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Quiz Badge */
-        .difficulty-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .difficulty-badge.easy {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .difficulty-badge.medium {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .difficulty-badge.hard {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
             .welcome-content {
-                flex-direction: column;
-                align-items: flex-start;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-wrap: wrap;
+                gap: 1.5rem;
             }
 
-            .cards-grid {
-                grid-template-columns: 1fr;
+            .welcome-text h1 {
+                font-size: 2rem;
+                font-weight: bold;
+                color: white;
+                margin-bottom: 0.5rem;
             }
 
+            .welcome-text p {
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 1.125rem;
+            }
+
+            .btn-primary {
+                background: white;
+                color: #7c3aed;
+                padding: 0.75rem 1.5rem;
+                border-radius: 0.5rem;
+                text-decoration: none;
+                font-weight: 600;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                transition: all 0.2s;
+                border: none;
+                cursor: pointer;
+                font-size: 1rem;
+            }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+                color: #6d28d9;
+            }
+
+            /* Stats Grid */
             .stats-grid {
-                grid-template-columns: 1fr;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1.5rem;
+                margin-bottom: 2rem;
             }
-        }
-    </style>
-{% endblock %}
 
-{% block body %}
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="#" class="navbar-brand">
-                <div class="navbar-brand-icon">👨‍🏫</div>
-                <span>ClassRoom</span>
-            </a>
-            <div class="navbar-user">
-                <span class="navbar-username">{{ app.user.userIdentifier }}</span>
-                <a href="{{ path('app_logout') }}" class="btn-logout">Déconnexion</a>
-            </div>
-        </div>
-    </nav>
+            .stat-card {
+                background: white;
+                border-radius: 1rem;
+                padding: 1.5rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
 
-    <!-- Main Content -->
-    <div class="main-container">
+            .stat-icon {
+                width: 3.5rem;
+                height: 3.5rem;
+                border-radius: 0.75rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.75rem;
+            }
 
-        <!-- Welcome Section -->
-        <div class="welcome-section">
-            <div class="welcome-content">
-                <div class="welcome-text">
-                    <h1>Bienvenue, {{ app.user.userIdentifier }} ! 👋</h1>
-                    <p>Gérez vos cours et QCM depuis votre tableau de bord</p>
-                </div>
-                <a href="{{ path('course_create') }}" class="btn-primary">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Créer un nouveau cours
+            .stat-icon.purple {
+                background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            }
+
+            .stat-icon.pink {
+                background: linear-gradient(135deg, #ec4899, #f472b6);
+            }
+
+            .stat-icon.blue {
+                background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            }
+
+            .stat-info h3 {
+                font-size: 1.875rem;
+                font-weight: bold;
+                color: #111827;
+                margin-bottom: 0.25rem;
+            }
+
+            .stat-info p {
+                color: #6b7280;
+                font-size: 0.875rem;
+            }
+
+            /* Section Titles */
+            .section-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: #111827;
+            }
+
+            /* Cards Grid */
+            .cards-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 1.5rem;
+                margin-bottom: 3rem;
+            }
+
+            .course-card {
+                background: white;
+                border-radius: 1rem;
+                padding: 1.5rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s;
+                border: 2px solid transparent;
+            }
+
+            .course-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+                border-color: #8b5cf6;
+            }
+
+            .course-header {
+                display: flex;
+                align-items: start;
+                gap: 1rem;
+                margin-bottom: 1rem;
+            }
+
+            .course-icon {
+                width: 3rem;
+                height: 3rem;
+                background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+                border-radius: 0.75rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+                flex-shrink: 0;
+            }
+
+            .course-title {
+                flex: 1;
+            }
+
+            .course-title h3 {
+                font-size: 1.25rem;
+                font-weight: bold;
+                color: #111827;
+                margin-bottom: 0.25rem;
+            }
+
+            .course-meta {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                color: #6b7280;
+                font-size: 0.875rem;
+            }
+
+            .course-meta svg {
+                width: 1rem;
+                height: 1rem;
+            }
+
+            .course-description {
+                color: #6b7280;
+                margin-bottom: 1rem;
+                line-height: 1.5;
+            }
+
+            .course-footer {
+                display: flex;
+                gap: 0.75rem;
+            }
+
+            .btn-sm {
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+                text-decoration: none;
+                font-weight: 500;
+                font-size: 0.875rem;
+                transition: all 0.2s;
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                border: none;
+                cursor: pointer;
+            }
+
+            .btn-info {
+                background: #7c3aed;
+                color: white;
+            }
+
+            .btn-info:hover {
+                background: #6d28d9;
+                color: white;
+            }
+
+            .btn-secondary {
+                background: #e5e7eb;
+                color: #374151;
+            }
+
+            .btn-secondary:hover {
+                background: #d1d5db;
+                color: #1f2937;
+            }
+
+            /* Empty State */
+            .empty-state {
+                background: white;
+                border-radius: 1rem;
+                padding: 3rem 2rem;
+                text-align: center;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            }
+
+            .empty-state-icon {
+                font-size: 4rem;
+                margin-bottom: 1rem;
+                opacity: 0.5;
+            }
+
+            .empty-state h3 {
+                font-size: 1.25rem;
+                font-weight: bold;
+                color: #111827;
+                margin-bottom: 0.5rem;
+            }
+
+            .empty-state p {
+                color: #6b7280;
+                margin-bottom: 1.5rem;
+            }
+
+            /* Quiz Badge */
+            .difficulty-badge {
+                display: inline-block;
+                padding: 0.25rem 0.75rem;
+                border-radius: 9999px;
+                font-size: 0.75rem;
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+
+            .difficulty-badge.easy {
+                background: #d1fae5;
+                color: #065f46;
+            }
+
+            .difficulty-badge.medium {
+                background: #fef3c7;
+                color: #92400e;
+            }
+
+            .difficulty-badge.hard {
+                background: #fee2e2;
+                color: #991b1b;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .welcome-content {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                .cards-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .stats-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    {% endblock %}
+
+    {% block body %}
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <a href="#" class="navbar-brand">
+                    <div class="navbar-brand-icon">👨‍🏫</div>
+                    <span>ClassRoom</span>
                 </a>
-            </div>
-        </div>
-
-        <!-- Stats Grid -->
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon purple">📚</div>
-                <div class="stat-info">
-                    <h3>{{ courses|length }}</h3>
-                    <p>Cours créés</p>
+                <div class="navbar-user">
+                    <span class="navbar-username">{{ app.user.userIdentifier }}</span>
+                    <a href="{{ path('app_logout') }}" class="btn-logout">Déconnexion</a>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon pink">📝</div>
-                <div class="stat-info">
-                    <h3>{{ quizzes|length }}</h3>
-                    <p>QCM disponibles</p>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-container">
+
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <div class="welcome-content">
+                    <div class="welcome-text">
+                        <h1>Bienvenue, {{ app.user.userIdentifier }} ! 👋</h1>
+                        <p>Gérez vos cours et QCM depuis votre tableau de bord</p>
+                    </div>
+                    <a href="{{ path('course_create') }}" class="btn-primary">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Créer un nouveau cours
+                    </a>
                 </div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon blue">👥</div>
-                <div class="stat-info">
-                    <h3>-</h3>
-                    <p>Étudiants actifs</p>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon purple">📚</div>
+                    <div class="stat-info">
+                        <h3>{{ courses|length }}</h3>
+                        <p>Cours créés</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon pink">📝</div>
+                    <div class="stat-info">
+                        <h3>{{ quizzes|length }}</h3>
+                        <p>QCM disponibles</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon blue">👥</div>
+                    <div class="stat-info">
+                        <h3>-</h3>
+                        <p>Étudiants actifs</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Courses Section -->
-        <div class="section-header">
-            <h2 class="section-title">📚 Vos cours</h2>
-        </div>
-
-        {% if courses is empty %}
-            <div class="empty-state">
-                <div class="empty-state-icon">📚</div>
-                <h3>Aucun cours pour le moment</h3>
-                <p>Commencez par créer votre premier cours pour vos étudiants</p>
-                <a href="{{ path('course_create') }}" class="btn-primary">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Créer un cours
-                </a>
+            <!-- Courses Section -->
+            <div class="section-header">
+                <h2 class="section-title">📚 Vos cours</h2>
             </div>
-        {% else %}
-            <div class="cards-grid">
-                {% for course in courses %}
-                    <div class="course-card">
-                        <div class="course-header">
-                            <div class="course-icon">📖</div>
-                            <div class="course-title">
-                                <h3>{{ course.name }}</h3>
-                                <div class="course-meta">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                    <span>{{ course.duration }} minutes</span>
+
+            {% if courses is empty %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">📚</div>
+                    <h3>Aucun cours pour le moment</h3>
+                    <p>Commencez par créer votre premier cours pour vos étudiants</p>
+                    <a href="{{ path('course_create') }}" class="btn-primary">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Créer un cours
+                    </a>
+                </div>
+            {% else %}
+                <div class="cards-grid">
+                    {% for course in courses %}
+                        <div class="course-card">
+                            <div class="course-header">
+                                <div class="course-icon">📖</div>
+                                <div class="course-title">
+                                    <h3>{{ course.name }}</h3>
+                                    <div class="course-meta">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        <span>{{ course.duration }} minutes</span>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="course-footer">
+                                <a href="{{ path('course_view', { id: course.id }) }}" class="btn-sm btn-info">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    Voir le cours
+                                </a>
+                                <a href="#" class="btn-sm btn-secondary">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                    Modifier
+                                </a>
+                            </div>
                         </div>
-                        <div class="course-footer">
-                            <a href="{{ path('course_view', { id: course.id }) }}" class="btn-sm btn-info">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                                Voir le cours
-                            </a>
-                            <a href="#" class="btn-sm btn-secondary">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                </svg>
-                                Modifier
-                            </a>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
 
-        <!-- Quizzes Section -->
-        <div class="section-header">
-            <h2 class="section-title">📝 Vos QCM</h2>
-        </div>
-
-        {% if quizzes is empty %}
-            <div class="empty-state">
-                <div class="empty-state-icon">📝</div>
-                <h3>Aucun QCM disponible</h3>
-                <p>Créez des QCM pour évaluer vos étudiants</p>
-                <a href="#" class="btn-primary">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Quizzes Section -->
+            <div class="section-header">
+                <h2 class="section-title">📝 Vos QCM</h2>
+                {# J'ai ajouté ce bouton ici pour que tu puisses créer un QCM même si tu en as déjà #}
+                <a href="{{ path('quiz_create') }}" class="btn-sm btn-info" style="text-decoration: none;">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                     </svg>
-                    Créer un QCM
+                    Nouveau QCM
                 </a>
             </div>
-        {% else %}
-            <div class="cards-grid">
-                {% for quiz in quizzes %}
-                    <div class="course-card">
-                        <div class="course-header">
-                            <div class="course-icon">✏️</div>
-                            <div class="course-title">
-                                <h3>{{ quiz.name }}</h3>
-                                <div class="course-meta">
-                                    {% set difficulty = quiz.diffilculty|lower %}
-                                    <span class="difficulty-badge {{ difficulty == 'facile' ? 'easy' : (difficulty == 'moyen' ? 'medium' : 'hard') }}">
+
+            {% if quizzes is empty %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">📝</div>
+                    <h3>Aucun QCM disponible</h3>
+                    <p>Créez des QCM pour évaluer vos étudiants</p>
+                    {# ICI : Correction du lien #}
+                    <a href="{{ path('quiz_create') }}" class="btn-primary">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Créer un QCM
+                    </a>
+                </div>
+            {% else %}
+                <div class="cards-grid">
+                    {% for quiz in quizzes %}
+                        <div class="course-card">
+                            <div class="course-header">
+                                <div class="course-icon">✏️</div>
+                                <div class="course-title">
+                                    <h3>{{ quiz.name }}</h3>
+                                    <div class="course-meta">
+                                        {% set difficulty = quiz.diffilculty|lower %}
+                                        <span class="difficulty-badge {{ difficulty == 'facile' ? 'easy' : (difficulty == 'moyen' ? 'medium' : 'hard') }}">
                                         {{ quiz.diffilculty }}
                                     </span>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="course-footer">
+                                <a href="{{ path('quiz_view', { id: quiz.id }) }}" class="btn-sm btn-info">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    Voir le QCM
+                                </a>
+                                <a href="#" class="btn-sm btn-secondary">
+                                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                    Modifier
+                                </a>
+                            </div>
                         </div>
-                        <div class="course-footer">
-                            <a href="{{ path('quiz_view', { id: quiz.id }) }}" class="btn-sm btn-info">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                                Voir le QCM
-                            </a>
-                            <a href="#" class="btn-sm btn-secondary">
-                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                </svg>
-                                Modifier
-                            </a>
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
 
-    </div>
-{% endblock %}
+        </div>
+    {% endblock %}
