@@ -28,4 +28,27 @@ class TeacherController extends AbstractController
             'quizzes' => $quizzes,
         ]);
     }
+
+    #[Route('/api/teacher/DataDashboard', name: 'api_teacher_dashboard', methods: ['GET'])]
+    public function DataDashboard(CourseRepository $courseRepo, QuizRepository $quizRepo): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user) return $this->json(['error' => 'Accès refusé'], 403);
+
+        $courses = $courseRepo->findBy(['professor' => $user]);
+        $quizzes = $quizRepo->findBy(['course_associated' => $courses]);
+
+        // On transforme les entités en Outputs
+        $coursesOutput = array_map(fn($c) => new CourseOutput($c), $courses);
+        $quizzesOutput = array_map(fn($q) => new QuizOutput($q), $quizzes);
+
+        return $this->json([
+            'stats' => [
+                'totalCourses' => count($courses),
+                'totalQuizzes' => count($quizzes),
+            ],
+            'courses' => $coursesOutput,
+            'quizzes' => $quizzesOutput
+        ]);
+    }
 }

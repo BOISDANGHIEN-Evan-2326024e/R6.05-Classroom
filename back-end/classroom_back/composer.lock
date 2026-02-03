@@ -1120,6 +1120,7 @@
             "time": "2025-10-26T09:35:14+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "nelmio/api-doc-bundle",
             "version": "v5.9.2",
             "source": {
@@ -1199,18 +1200,55 @@
                 "symfony/twig-bundle": "For using the Swagger UI.",
                 "symfony/validator": "For describing the validation constraints in your models.",
                 "willdurand/hateoas-bundle": "For extracting HATEOAS metadata."
+=======
+            "name": "nelmio/cors-bundle",
+            "version": "2.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nelmio/NelmioCorsBundle.git",
+                "reference": "3d80dbcd5d1eb5f8b20ed5199e1778d44c2e4d1c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nelmio/NelmioCorsBundle/zipball/3d80dbcd5d1eb5f8b20ed5199e1778d44c2e4d1c",
+                "reference": "3d80dbcd5d1eb5f8b20ed5199e1778d44c2e4d1c",
+                "shasum": ""
+            },
+            "require": {
+                "psr/log": "^1.0 || ^2.0 || ^3.0",
+                "symfony/framework-bundle": "^5.4 || ^6.0 || ^7.0 || ^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.11.5",
+                "phpstan/phpstan-deprecation-rules": "^1.2.0",
+                "phpstan/phpstan-phpunit": "^1.4",
+                "phpstan/phpstan-symfony": "^1.4.4",
+                "phpunit/phpunit": "^8"
+>>>>>>> 857f52a7672e43fba9748ef61417a7ebabed5f18
             },
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
+<<<<<<< HEAD
                     "dev-4.x": "4.x-dev",
                     "dev-5.x": "5.x-dev"
+=======
+                    "dev-master": "2.x-dev"
+>>>>>>> 857f52a7672e43fba9748ef61417a7ebabed5f18
                 }
             },
             "autoload": {
                 "psr-4": {
+<<<<<<< HEAD
                     "Nelmio\\ApiDocBundle\\": "src/"
                 }
+=======
+                    "Nelmio\\CorsBundle\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+>>>>>>> 857f52a7672e43fba9748ef61417a7ebabed5f18
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1218,6 +1256,7 @@
             ],
             "authors": [
                 {
+<<<<<<< HEAD
                     "name": "Symfony Community",
                     "homepage": "https://github.com/nelmio/NelmioApiDocBundle/contributors"
                 }
@@ -1520,6 +1559,27 @@
                 "source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.2"
             },
             "time": "2026-01-25T14:56:51+00:00"
+=======
+                    "name": "Nelmio",
+                    "homepage": "http://nelm.io"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://github.com/nelmio/NelmioCorsBundle/contributors"
+                }
+            ],
+            "description": "Adds CORS (Cross-Origin Resource Sharing) headers support in your Symfony application",
+            "keywords": [
+                "api",
+                "cors",
+                "crossdomain"
+            ],
+            "support": {
+                "issues": "https://github.com/nelmio/NelmioCorsBundle/issues",
+                "source": "https://github.com/nelmio/NelmioCorsBundle/tree/2.6.1"
+            },
+            "time": "2026-01-12T15:59:08+00:00"
+>>>>>>> 857f52a7672e43fba9748ef61417a7ebabed5f18
         },
         {
             "name": "psr/cache",

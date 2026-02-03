@@ -57,6 +57,8 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
     setCurrentPage('home');
   };
 
+  
+
   // 1. ÉCRAN DE CHARGEMENT
   if (isLoading) {
     return (

@@ -6,7 +6,7 @@ import {
   QCM,
   Note,
   Video,
-} from './types';
+} from '../types/index.ts';
 
 // Données utilisateur
 export const mockUser: User = {

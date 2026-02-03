@@ -6,6 +6,7 @@ use App\Entity\Answer;
 use App\Entity\Course;
 use App\Entity\Question;
 use App\Entity\Quiz;
+use App\Output\QuizOutput;
 use App\Repository\AnswerRepository;
 use App\Repository\CourseRepository;
 use App\Repository\QuestionRepository;
@@ -19,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+#[Route('/api/qcm')]
 class QuizController extends AbstractController
 {
     private CourseRepository $courseRepository;
@@ -229,5 +231,18 @@ class QuizController extends AbstractController
         return $this->render('quiz/view.html.twig', [
             'quiz' => $quiz,
         ]);
+    }
+
+    #[Route('', methods: ['GET'])]
+    public function index(QuizRepository $repo): JsonResponse
+    {
+        $quizzes = $repo->findAll();
+        return $this->json(array_map(fn($q) => new QuizOutput($q), $quizzes));
+    }
+
+    #[Route('/{id}', methods: ['GET'])]
+    public function show(Quiz $quiz): JsonResponse
+    {
+        return $this->json(new QuizOutput($quiz));
     }
 }
