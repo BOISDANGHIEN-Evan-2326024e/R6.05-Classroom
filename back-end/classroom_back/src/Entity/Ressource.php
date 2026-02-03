@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\CourseType;
 use App\Repository\RessourceRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RessourceRepository::class)]
@@ -25,6 +27,17 @@ class Ressource
 
     #[ORM\ManyToOne(inversedBy: 'ressource_associated')]
     private ?Course $lesson_associated = null;
+
+    /**
+     * @var Collection<int, Quiz>
+     */
+    #[ORM\OneToMany(targetEntity: Quiz::class, mappedBy: 'ressource_associated')]
+    private Collection $quizzes;
+
+    public function __construct()
+    {
+        $this->quizzes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -75,6 +88,36 @@ class Ressource
     public function setLessonAssociated(?Course $lesson_associated): static
     {
         $this->lesson_associated = $lesson_associated;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Quiz>
+     */
+    public function getQuizzes(): Collection
+    {
+        return $this->quizzes;
+    }
+
+    public function addQuiz(Quiz $quiz): static
+    {
+        if (!$this->quizzes->contains($quiz)) {
+            $this->quizzes->add($quiz);
+            $quiz->setRessourceAssociated($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuiz(Quiz $quiz): static
+    {
+        if ($this->quizzes->removeElement($quiz)) {
+            // set the owning side to null (unless already changed)
+            if ($quiz->getRessourceAssociated() === $this) {
+                $quiz->setRessourceAssociated(null);
+            }
+        }
 
         return $this;
     }

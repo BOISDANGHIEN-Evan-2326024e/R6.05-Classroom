@@ -40,4 +40,14 @@ class QuizRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function save(Quiz $newQuiz, bool $true)
+    {
+        $this->getEntityManager()->persist($newQuiz);
+        $this->getEntityManager()->flush();
+    }
+
+    public function flush()
+    {
+        $this->getEntityManager()->flush();
+    }
 }

@@ -36,6 +36,9 @@ class Quiz
     #[ORM\OneToMany(targetEntity: QuizAttempt::class, mappedBy: 'quiz_associated')]
     private Collection $quizAttempts;
 
+    #[ORM\ManyToOne(inversedBy: 'quizzes')]
+    private ?Ressource $ressource_associated = null;
+
     public function __construct()
     {
         $this->questions = new ArrayCollection();
@@ -139,6 +142,18 @@ class Quiz
                 $quizAttempt->setQuizAssociated(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRessourceAssociated(): ?Ressource
+    {
+        return $this->ressource_associated;
+    }
+
+    public function setRessourceAssociated(?Ressource $ressource_associated): static
+    {
+        $this->ressource_associated = $ressource_associated;
 
         return $this;
     }

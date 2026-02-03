@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Ressource;
 use App\Enum\CourseType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -26,7 +27,6 @@ class CourseController extends AbstractController
         }
 
         if ($request->isMethod('POST')) {
-            // Vérifier le token CSRF
             $submittedToken = $request->request->get('_token');
             if (!$this->isCsrfTokenValid('course_create', $submittedToken)) {
                 $this->addFlash('error', 'Token CSRF invalide');
@@ -35,8 +35,8 @@ class CourseController extends AbstractController
 
             $name = $request->request->get('name');
             $duration = $request->request->get('duration');
+            $description = $request->request->get('description');
 
-            // Validation
             if (empty($name) || empty($duration)) {
                 $this->addFlash('error', 'Veuillez remplir tous les champs obligatoires');
                 return $this->redirectToRoute('course_create');
@@ -47,15 +47,13 @@ class CourseController extends AbstractController
                 return $this->redirectToRoute('course_create');
             }
 
-            // Créer le cours
             $course = new Course();
             $course->setName($name);
             $course->setDuration((int)$duration);
+            $course->setDescription($description);
 
-            // Associer le professeur connecté
             $course->setProfessor($this->getUser());
 
-            // Gérer les fichiers uploadés
             $uploadedFiles = $request->files->get('files');
             $filesPaths = [];
 
@@ -68,7 +66,7 @@ class CourseController extends AbstractController
                 foreach ($uploadedFiles as $file) {
                     if ($file) {
                         // Vérifier la taille du fichier (50 Mo max)
-                        if ($file->getSize() > 50 * 1024 * 1024) {
+                        if ($file->getSize() > 500 * 1024 * 1024) {
                             $this->addFlash('error', 'Un fichier dépasse la taille maximale de 50 Mo');
                             continue;
                         }
@@ -96,6 +94,16 @@ class CourseController extends AbstractController
                         try {
                             $file->move($uploadDir, $newFilename);
                             $filesPaths[] = $newFilename;
+                            $ressource = new Ressource();
+                            $ressource->setName($originalFilename);
+                            $ressource->setPath('/uploads/courses/' . $newFilename);
+                            if (in_array($extension, ['mp4', 'avi', 'mov'])) {
+                                $ressource->setType(CourseType::VIDEO);
+                            } else {
+                                $ressource->setType(CourseType::PDF);
+                            }
+                            $ressource->setLessonAssociated($course);
+                            $entityManager->persist($ressource);
                         } catch (FileException $e) {
                             $this->addFlash('error', 'Erreur lors de l\'upload du fichier : ' . $file->getClientOriginalName());
                         }
@@ -103,25 +111,21 @@ class CourseController extends AbstractController
                 }
             }
 
-            if (!empty($filesPaths)) {
-                //Create une ressource qu'on relie ensuite au course
-            }
-
             // Sauvegarder en base de données
             $entityManager->persist($course);
             $entityManager->flush();
 
             $this->addFlash('success', 'Le cours a été créé avec succès !');
-            return $this->redirectToRoute('app_dashboard');
+            return $this->redirectToRoute('teacher_dashboard');
         }
 
         return $this->redirectToRoute('course_create');
     }
 
     #[Route('/course/{id}', name: 'course_view')]
-    public function view(Course $course): Response
+    public function show(Course $course): Response
     {
-        return $this->render('course/view.html.twig', [
+        return $this->render('course/show.html.twig', [
             'course' => $course,
         ]);
     }
