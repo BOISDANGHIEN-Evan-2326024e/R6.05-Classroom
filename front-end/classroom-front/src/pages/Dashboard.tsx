@@ -29,18 +29,14 @@ import {
   getTimeLeft,
   getQCMUrgence,
 } from '../utils/mockData';
+import { useNavigate } from 'react-router-dom';
 
 import { useDashboardData } from './../hooks/useDashboardData';
 
-interface DashboardProps {
-  setCurrentPage: (page: 'home' | 'dashboard' | 'login') => void;
-}
 
-export default function Dashboard({ setCurrentPage }: DashboardProps) {
+export default function Dashboard() { 
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [currentSection, setCurrentSection] = useState('accueil');
-  const [selectedNote, setSelectedNote] = useState<any>(null);
-
   // RÉCUPÉRATION DES DONNÉES DEPUIS SYMFONY
   const { 
     user, 
@@ -53,8 +49,8 @@ export default function Dashboard({ setCurrentPage }: DashboardProps) {
     error 
   } = useDashboardData();
 
-  const handleDisconnect = () => {
-    setCurrentPage('home');
+const handleDisconnect = () => {
+    navigate('/');
   };
 
   

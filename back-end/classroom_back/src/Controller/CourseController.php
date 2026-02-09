@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Output\CourseOutput;
 use App\Entity\Ressource;
 use App\Enum\CourseType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
