@@ -33,29 +33,57 @@ import { useNavigate } from 'react-router-dom';
 
 import { useDashboardData } from './../hooks/useDashboardData';
 
-
 export default function Dashboard() { 
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  
+  // États locaux nécessaires pour la navigation interne (ajoutés car manquants dans ton snippet)
+  const [currentSection, setCurrentSection] = useState('accueil');
+  const [selectedNote, setSelectedNote] = useState(null);
+
   // RÉCUPÉRATION DES DONNÉES DEPUIS SYMFONY
+  // On renomme les variables extraites pour pouvoir appliquer des valeurs par défaut ensuite
   const { 
-    user, 
-    stats, 
-    cours, 
-    qcmAFaire, 
-    notes, 
-    videos, 
+    user: fetchedUser, 
+    stats: fetchedStats, 
+    cours: fetchedCours, 
+    qcmAFaire: fetchedQcmAFaire, 
+    notes: fetchedNotes, 
+    videos: fetchedVideos, 
     isLoading, 
     error 
   } = useDashboardData();
 
-const handleDisconnect = () => {
+  // --- LOGIQUE DE SÉCURISATION DES DONNÉES (FALLBACKS) ---
+  // Si le fetch échoue ou renvoie null, on utilise ces valeurs "vides" pour afficher la page quand même.
+  
+  const user = fetchedUser || { 
+    prenom: 'Invité', 
+    nom: '', 
+    email: 'Non connecté',
+    matieres: [],
+    dateInscription: new Date() // Date par défaut pour éviter le crash du .toLocaleDateString
+  };
+
+  const stats = fetchedStats || {
+    moyenneGenerale: '-',
+    tauxReussite: 0,
+    totalQCMTermines: 0,
+    totalQCMAfaire: 0,
+    progressionMois: [] // Tableau vide pour éviter le crash du graph
+  };
+
+  // Pour les listes, on s'assure que ce sont des tableaux, sinon tableau vide
+  const cours = Array.isArray(fetchedCours) ? fetchedCours : [];
+  const qcmAFaire = Array.isArray(fetchedQcmAFaire) ? fetchedQcmAFaire : [];
+  const notes = Array.isArray(fetchedNotes) ? fetchedNotes : [];
+  const videos = Array.isArray(fetchedVideos) ? fetchedVideos : [];
+
+  const handleDisconnect = () => {
     navigate('/');
   };
 
-  
-
-  // 1. ÉCRAN DE CHARGEMENT
+  // 1. ÉCRAN DE CHARGEMENT (Tu peux le garder ou l'enlever si tu veux afficher le squelette tout de suite)
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-slate-50">
@@ -67,29 +95,33 @@ const handleDisconnect = () => {
     );
   }
 
-  // 2. ÉCRAN D'ERREUR
-  if (error || !user || !stats) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-slate-50">
-        <div className="text-center p-8">
-          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-slate-900">Erreur de chargement</h2>
-          <p className="text-slate-600 mb-4">{error || "Impossible de joindre le serveur."}</p>
-          <button onClick={() => window.location.reload()} className="px-4 py-2 bg-purple-600 text-white rounded-lg">
-            Réessayer
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // 2. ÉCRAN D'ERREUR SUPPRIMÉ/MODIFIÉ
+  // Au lieu de bloquer tout l'écran, on peut juste afficher une notification toast ou rien du tout.
+  // J'ai commenté le bloc bloquant ci-dessous :
 
-  const graphData = stats.progressionMois.map((value: number, index: number) => ({
+  /* if (error || !user || !stats) {
+    return ( ... ÉCRAN D'ERREUR ... );
+  }
+  */
+
+  // Préparation des données du graph avec sécurité (optional chaining ?.)
+  const rawGraphData = stats.progressionMois || [];
+  const graphData = rawGraphData.map((value, index) => ({
     day: `J${index + 1}`,
     moyenne: value,
   }));
 
   return (
     <div className="flex h-screen bg-slate-50">
+      
+      {/* Affichage discret d'un message d'erreur si les données sont incomplètes (Optionnel) */}
+      {error && (
+        <div className="fixed bottom-4 right-4 z-50 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded shadow-lg flex items-center gap-2">
+           <AlertCircle size={20} />
+           <p className="text-sm">Certaines données n'ont pas pu être chargées.</p>
+        </div>
+      )}
+
       {/* Sidebar */}
       <aside
         className={`fixed left-0 top-0 z-40 h-screen bg-white shadow-lg transition-all duration-300 ease-out ${
@@ -187,7 +219,7 @@ const handleDisconnect = () => {
                 {[
                   {
                     title: 'Moyenne générale',
-                    value: `${stats.moyenneGenerale}/20`,
+                    value: typeof stats.moyenneGenerale === 'number' ? `${stats.moyenneGenerale}/20` : stats.moyenneGenerale,
                     icon: TrendingUp,
                     color: 'from-blue-500 to-blue-600',
                   },
@@ -225,7 +257,9 @@ const handleDisconnect = () => {
                   );
                 })}
               </div>
-{/**
+
+              {/* Si le graphData est vide, on peut cacher le graphique ou afficher un message vide */}
+              {graphData.length > 0 && (
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
                 <h3 className="text-lg font-bold text-slate-900 mb-6">Progression (30 derniers jours)</h3>
                 <ResponsiveContainer width="100%" height={300}>
@@ -251,7 +285,8 @@ const handleDisconnect = () => {
                   </LineChart>
                 </ResponsiveContainer>
               </div>
-{/** */}
+              )}
+
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
                 <div className="flex items-center gap-2 mb-6">
                   <AlertCircle className="text-red-500" size={24} />
@@ -259,6 +294,9 @@ const handleDisconnect = () => {
                 </div>
 
                 <div className="space-y-3">
+                  {/* Message si aucun QCM n'est chargé */}
+                  {qcmAFaire.length === 0 && <p className="text-slate-500 italic">Aucun QCM urgent ou impossible de charger les données.</p>}
+                  
                   {qcmAFaire.map((qcm: any) => {
                     const timeLeft = getTimeLeft(qcm.deadline);
                     const colors = getQCMColor(qcm.deadline);
@@ -291,6 +329,7 @@ const handleDisconnect = () => {
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
                 <h3 className="text-lg font-bold text-slate-900 mb-6">📹 Dernières vidéos du professeur</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {videos.length === 0 && <p className="text-slate-500 italic col-span-3">Aucune vidéo disponible.</p>}
                   {videos.map((video: any) => (
                     <div
                       key={video.id}
@@ -437,11 +476,13 @@ const handleDisconnect = () => {
                       </div>
                       <div>
                         <p className="text-sm text-slate-600">Date</p>
-                        <p className="text-3xl font-bold text-slate-900">{selectedNote.date.toLocaleDateString('fr-FR')}</p>
+                        <p className="text-3xl font-bold text-slate-900">
+                            {/* Sécurité si date n'est pas un objet Date valide */}
+                            {selectedNote.date instanceof Date ? selectedNote.date.toLocaleDateString('fr-FR') : 'Date inconnue'}
+                        </p>
                       </div>
                     </div>
                   </div>
-                  {/* ... Affichage des réponses si existantes ... */}
                 </div>
               ) : (
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
@@ -487,7 +528,7 @@ const handleDisconnect = () => {
                               </div>
                             </td>
                             <td className="px-6 py-4 text-sm text-slate-600">
-                              {note.date.toLocaleDateString('fr-FR')}
+                              {note.date instanceof Date ? note.date.toLocaleDateString('fr-FR') : ''}
                             </td>
                             <td className="px-6 py-4">
                               <button
@@ -521,7 +562,7 @@ const handleDisconnect = () => {
                     </h2>
                     <p className="text-slate-600 mb-4">{user.email}</p>
                     <p className="text-sm text-slate-600">
-                      Inscrit depuis le {user.dateInscription.toLocaleDateString('fr-FR')}
+                      Inscrit depuis le {user.dateInscription instanceof Date ? user.dateInscription.toLocaleDateString('fr-FR') : 'Date inconnue'}
                     </p>
                   </div>
                 </div>
@@ -530,7 +571,7 @@ const handleDisconnect = () => {
                   <div>
                     <h3 className="text-lg font-bold text-slate-900 mb-4">Matières suivies</h3>
                     <div className="flex flex-wrap gap-3">
-                      {user.matieres.map((matiere: string, i: number) => (
+                      {user.matieres && user.matieres.map((matiere: string, i: number) => (
                         <span
                           key={i}
                           className="px-4 py-2 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 rounded-lg font-semibold text-sm"
