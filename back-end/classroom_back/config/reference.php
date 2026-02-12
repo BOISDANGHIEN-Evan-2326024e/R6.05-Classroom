@@ -1439,10 +1439,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
- *     nelmio_cors?: NelmioCorsConfig,
- *     "when@dev"?: array{
- *         imports?: ImportsConfig,
- *         parameters?: ParametersConfig,
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
  *         maker?: MakerConfig,
@@ -1458,11 +1454,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
- *         nelmio_cors?: NelmioCorsConfig,
- *     },
- *     "when@prod"?: array{
- *         imports?: ImportsConfig,
- *         parameters?: ParametersConfig,
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
  *         doctrine?: DoctrineConfig,
@@ -1471,11 +1462,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         nelmio_api_doc?: NelmioApiDocConfig,
- *         nelmio_cors?: NelmioCorsConfig,
- *     },
- *     "when@test"?: array{
- *         imports?: ImportsConfig,
- *         parameters?: ParametersConfig,
  *         nelmio_cors?: NelmioCorsConfig,
  *     },
  *     "when@test"?: array{
@@ -1569,7 +1555,7 @@ namespace Symfony\Component\Routing\Loader\Configurator;
  * @psalm-type AliasConfig = array{
  *     alias: string,
  *     deprecated?: array{package:string, version:string, message?:string},
- * }
+ * }
  * @psalm-type RoutesConfig = array{
  *     "when@dev"?: array<string, RouteConfig|ImportConfig|AliasConfig>,
  *     "when@prod"?: array<string, RouteConfig|ImportConfig|AliasConfig>,
