@@ -1347,7 +1347,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     intercept_redirects?: bool|Param, // Default: false
  *     excluded_ajax_paths?: scalar|Param|null, // Default: "^/((index|app(_[\\w]+)?)\\.php/)?_wdt"
  * }
-<<<<<<< HEAD
  * @psalm-type NelmioApiDocConfig = array{
  *     type_info?: bool|Param, // Use the symfony/type-info component for determining types. // Default: false
  *     use_validation_groups?: bool|Param, // If true, `groups` passed to #[Model] attributes will be used to limit validation constraints // Default: false
@@ -1397,11 +1396,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         }>,
  *     },
  * }
- * @psalm-type ConfigType = array{
- *     imports?: ImportsConfig,
- *     parameters?: ParametersConfig,
- *     services?: ServicesConfig,
-=======
  * @psalm-type NelmioCorsConfig = array{
  *     defaults?: array{
  *         allow_credentials?: bool|Param, // Default: false
@@ -1434,24 +1428,17 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
  *     services?: ServicesConfig,
->>>>>>> 857f52a7672e43fba9748ef61417a7ebabed5f18
  *     framework?: FrameworkConfig,
  *     doctrine?: DoctrineConfig,
  *     doctrine_migrations?: DoctrineMigrationsConfig,
  *     twig?: TwigConfig,
  *     twig_extra?: TwigExtraConfig,
  *     security?: SecurityConfig,
-<<<<<<< HEAD
  *     nelmio_api_doc?: NelmioApiDocConfig,
- *     "when@dev"?: array{
- *         imports?: ImportsConfig,
- *         parameters?: ParametersConfig,
-=======
  *     nelmio_cors?: NelmioCorsConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
->>>>>>> 857f52a7672e43fba9748ef61417a7ebabed5f18
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
  *         maker?: MakerConfig,
@@ -1461,19 +1448,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         web_profiler?: WebProfilerConfig,
-<<<<<<< HEAD
  *         nelmio_api_doc?: NelmioApiDocConfig,
- *     },
- *     "when@prod"?: array{
- *         imports?: ImportsConfig,
- *         parameters?: ParametersConfig,
-=======
  *         nelmio_cors?: NelmioCorsConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
->>>>>>> 857f52a7672e43fba9748ef61417a7ebabed5f18
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
  *         doctrine?: DoctrineConfig,
@@ -1481,19 +1461,12 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig?: TwigConfig,
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
-<<<<<<< HEAD
  *         nelmio_api_doc?: NelmioApiDocConfig,
- *     },
- *     "when@test"?: array{
- *         imports?: ImportsConfig,
- *         parameters?: ParametersConfig,
-=======
  *         nelmio_cors?: NelmioCorsConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
->>>>>>> 857f52a7672e43fba9748ef61417a7ebabed5f18
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
  *         doctrine?: DoctrineConfig,
@@ -1502,11 +1475,8 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         web_profiler?: WebProfilerConfig,
-<<<<<<< HEAD
  *         nelmio_api_doc?: NelmioApiDocConfig,
-=======
  *         nelmio_cors?: NelmioCorsConfig,
->>>>>>> 857f52a7672e43fba9748ef61417a7ebabed5f18
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

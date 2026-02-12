@@ -43,7 +43,6 @@ class QuizController extends AbstractController
     #[Route('/quiz/create', name: 'quiz_create')]
     public function create(): Response
     {
-        // Utilisation de $this-> au lieu de réinjecter
         $user = $this->getUser();
         $courses = $this->courseRepository->findBy(['professor' => $user]);
 
@@ -52,24 +51,6 @@ class QuizController extends AbstractController
         ]);
     }
 
-    #[Route('/api/course/{id}/resources', name: 'api_course_resources', methods: ['GET'])]
-    public function getCourseResources(Course $course): JsonResponse
-    {
-        if ($course->getProfessor() !== $this->getUser()) {
-            return new JsonResponse(['error' => 'Unauthorized'], 403);
-        }
-
-        $resources = [];
-        foreach ($course->getRessourceAssociated() as $resource) {
-            $resources[] = [
-                'id' => $resource->getId(),
-                'name' => $resource->getName(),
-                'type' => $resource->getType()->value ?? 'document'
-            ];
-        }
-
-        return new JsonResponse($resources);
-    }
 
     #[Route('/quiz/generate', name: 'quiz_generate_action', methods: ['POST'])]
     public function generateAction(
@@ -213,7 +194,6 @@ class QuizController extends AbstractController
             }
 
         } catch (\Exception $e) {
-            dump($e);
             $this->addFlash('error', 'Erreur API : ' . $e->getMessage());
         }
 

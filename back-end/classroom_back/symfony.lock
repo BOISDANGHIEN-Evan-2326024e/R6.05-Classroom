@@ -46,6 +46,8 @@
         "files": [
             "./config/packages/nelmio_api_doc.yaml",
             "./config/routes/nelmio_api_doc.yaml"
+        ]
+    },
     "nelmio/cors-bundle": {
         "version": "2.6",
         "recipe": {
