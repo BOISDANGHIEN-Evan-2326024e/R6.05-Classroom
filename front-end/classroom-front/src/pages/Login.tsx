@@ -1,23 +1,21 @@
 import { useState } from 'react'
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
+import { useNavigate } from 'react-router-dom';
 
-interface LoginProps {
-  setCurrentPage: (page: 'home' | 'dashboard' | 'login') => void;
-}
 
-export default function Login({ setCurrentPage }: LoginProps) {
+
+export default function Login() { // 3. Plus de props
+  const navigate = useNavigate(); // 4. Initialise
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [userRole, setUserRole] = useState<'student' | 'teacher' | null>(null)
+  const goBackHome = () => navigate('/');
 
   const handleSubmit = async () => {
-  if (!email || !password) {
-    alert('Veuillez remplir tous les champs');
-    return;
-  }
+    
   
   setIsLoading(true);
 
@@ -39,8 +37,9 @@ export default function Login({ setCurrentPage }: LoginProps) {
       
       // Optionnel : stocker l'ID dans le localStorage si besoin
       localStorage.setItem('user_id', userData.id);
+
+      navigate('/dashboard');
       
-      setCurrentPage('dashboard');
     } else {
       alert('Identifiants incorrects. Vérifiez votre email ou mot de passe.');
     }
@@ -50,7 +49,7 @@ export default function Login({ setCurrentPage }: LoginProps) {
   } finally {
     setIsLoading(false);
   }
-};
+  };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
@@ -132,7 +131,7 @@ export default function Login({ setCurrentPage }: LoginProps) {
 
                 <p className="text-center text-gray-600 mt-6">
                   <button
-                    onClick={() => setCurrentPage('home')}
+                    onClick={() => navigate('/')}
                     className="text-purple-600 hover:text-purple-700 font-semibold hover:underline"
                   >
                     Retour à l'accueil

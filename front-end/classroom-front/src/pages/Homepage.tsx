@@ -13,37 +13,33 @@ import {
   User,
 } from 'lucide-react';
 
-interface HomepageProps {
-  setCurrentPage: (page: 'home' | 'dashboard' | 'login') => void;
-}
+import { useNavigate } from 'react-router-dom';
 
-export default function Homepage({ setCurrentPage }: HomepageProps) {
-  const [scrollY, setScrollY] = useState(0);
+
+export default function Homepage() {
+  const navigate = useNavigate();
+
+  // CORRECTIF : Ajout des variables manquantes (à lier plus tard à ton système d'auth)
   const [isConnected, setIsConnected] = useState(false);
-  const [userRole, setUserRole] = useState<'eleve' | 'prof' | null>(null);
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState('Utilisateur');
 
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+  // Pour aller vers le dashboard
   const handleConnect = (role: 'eleve' | 'prof') => {
-    setIsConnected(true);
-    setUserRole(role);
-    setUserName(role === 'eleve' ? 'Étudiant' : 'Professeur');
-    // 🎯 Redirection vers Dashboard
-    setCurrentPage('dashboard');
+    // Tu pourrais ici mettre setIsConnected(true) pour tester
+    navigate('/dashboard');
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
   };
 
   const handleDisconnect = () => {
     setIsConnected(false);
-    setUserRole(null);
-    setUserName('');
-    // 🎯 Retour à l'accueil
-    setCurrentPage('home');
+    navigate('/');
   };
+
+
+
 
   return (
     <div className="bg-slate-50 overflow-x-hidden">
@@ -74,7 +70,7 @@ export default function Homepage({ setCurrentPage }: HomepageProps) {
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-500 group-hover:w-full transition-all duration-300"></span>
               </a>
               <button
-                onClick={() => setCurrentPage('login')}
+                onClick={handleLogin}
                 className="bg-gradient-to-r from-purple-600 to-pink-500 text-white font-semibold px-6 py-2 rounded-lg hover:shadow-lg transition-all duration-300 text-sm"
               >
                 Se connecter
@@ -292,24 +288,6 @@ export default function Homepage({ setCurrentPage }: HomepageProps) {
         </section>
       ) : (
         <section id="roles" className="py-24 bg-white min-h-screen flex items-center justify-center">
-          <div className="max-w-2xl mx-auto text-center animate-slideInUp">
-            <h2 className="text-5xl font-bold mb-4 text-slate-900">
-              Bienvenue sur ClassRoom Neuille ! 👋
-            </h2>
-            <p className="text-2xl text-slate-700 mb-2">
-              Vous êtes maintenant connecté en tant que <strong className="text-purple-600">{userName}</strong>
-            </p>
-            <p className="text-xl text-slate-600 mb-8">
-              Accédez à votre espace personnel pour commencer votre apprentissage
-            </p>
-            <button
-              onClick={() => setCurrentPage('dashboard')}
-              className="bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold py-4 px-8 rounded-lg hover:-translate-y-2 active:translate-y-0 transition-transform duration-300 text-lg flex items-center justify-center gap-2 mx-auto shadow-xl hover:shadow-2xl"
-            >
-              Accéder à mon espace
-              <ChevronRight size={24} />
-            </button>
-          </div>
         </section>
       )}
 
@@ -325,7 +303,8 @@ export default function Homepage({ setCurrentPage }: HomepageProps) {
             Rejoignez des milliers d'utilisateurs qui transforment leur façon d'apprendre
           </p>
           <button
-            onClick={() => setCurrentPage('login')}
+            onClick={handleLogin}
+
             className="bg-white text-purple-600 font-bold py-4 px-8 rounded-lg hover:-translate-y-2 active:translate-y-0 transition-all duration-300 text-lg flex items-center justify-center gap-2 mx-auto shadow-xl hover:shadow-2xl"
           >
             Créer un compte gratuit

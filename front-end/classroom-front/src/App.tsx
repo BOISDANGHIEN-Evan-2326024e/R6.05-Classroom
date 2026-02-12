@@ -1,17 +1,16 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Homepage from './pages/Homepage';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
-import { useState } from 'react';
 
 export default function App() {
-  //const [currentPage, setCurrentPage] = useState('home');
-  const [currentPage, setCurrentPage] = useState('home');
-
   return (
-    <>
-      {currentPage === 'home' && <Homepage setCurrentPage={setCurrentPage} />}
-      {currentPage === 'dashboard' && <Dashboard setCurrentPage={setCurrentPage} />}
-      {currentPage === 'login' && <Login setCurrentPage={setCurrentPage} />}
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </Router>
   );
 }

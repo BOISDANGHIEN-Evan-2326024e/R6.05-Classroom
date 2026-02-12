@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Output\CourseOutput;
 use App\Entity\Ressource;
 use App\Enum\CourseType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -147,5 +147,18 @@ class CourseController extends AbstractController
         }
 
         return $this->json($data);
+    }
+
+    #[Route('/api/cours', name: 'api_courses_index', methods: ['GET'])]
+    public function index(EntityManagerInterface $entityManager): JsonResponse
+    {
+        // On demande à l'EntityManager de nous donner le repository de l'entité Course
+        $courses = $entityManager->getRepository(Course::class)->findAll();
+
+        $output = array_map(function ($course) {
+            return new CourseOutput($course);
+        }, $courses);
+
+        return $this->json($output);
     }
 }
